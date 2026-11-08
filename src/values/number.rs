@@ -17,6 +17,8 @@ pub enum NumericRange {
   All,
   /// Only values >= 0 are allowed.
   NonNegative,
+  /// Only values between 0 and 1 (inclusive) are allowed.
+  ZeroToOne,
 }
 
 impl NumericRange {
@@ -29,6 +31,7 @@ impl NumericRange {
     match self {
       NumericRange::All => Ok(value),
       NumericRange::NonNegative if value >= 0.0 => Ok(value),
+      NumericRange::ZeroToOne if (0.0..=1.0).contains(&value) => Ok(value),
       _ => Err(location.new_custom_error(ParserError::InvalidValue)),
     }
   }
@@ -38,6 +41,7 @@ impl NumericRange {
     match self {
       NumericRange::All => value,
       NumericRange::NonNegative => value.max(0.0),
+      NumericRange::ZeroToOne => value.clamp(0.0, 1.0),
     }
   }
 }

@@ -2,8 +2,8 @@
 
 use crate::error::{ParserError, PrinterError};
 use crate::printer::Printer;
-use crate::traits::{Parse, ToCss};
-use crate::values::number::{CSSInteger, CSSNumber};
+use crate::traits::{Parse, ParseNumeric, ToCss};
+use crate::values::number::{CSSInteger, CSSNumber, NumericRange};
 #[cfg(feature = "visitor")]
 use crate::visitor::Visit;
 use cssparser::*;
@@ -86,11 +86,11 @@ impl<'i> Parse<'i> for EasingFunction {
     input.parse_nested_block(|input| {
       match_ignore_ascii_case! { &function,
         "cubic-bezier" => {
-          let x1 = CSSNumber::parse(input)?;
+          let x1 = CSSNumber::parse_with_range(input, NumericRange::ZeroToOne)?;
           input.expect_comma()?;
           let y1 = CSSNumber::parse(input)?;
           input.expect_comma()?;
-          let x2 = CSSNumber::parse(input)?;
+          let x2 = CSSNumber::parse_with_range(input, NumericRange::ZeroToOne)?;
           input.expect_comma()?;
           let y2 = CSSNumber::parse(input)?;
           Ok(EasingFunction::CubicBezier { x1, y1, x2, y2 })
@@ -101,6 +101,10 @@ impl<'i> Parse<'i> for EasingFunction {
             input.expect_comma()?;
             StepPosition::parse(input)
           }).unwrap_or_default();
+          let min_count = if position == StepPosition::JumpNone { 2 } else { 1 };
+          if count < min_count {
+            return Err(location.new_custom_error(ParserError::InvalidValue));
+          }
           Ok(EasingFunction::Steps { count, position })
         },
         _ => return Err(location.new_unexpected_token_error(Token::Ident(function.clone())))

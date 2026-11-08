@@ -12031,6 +12031,34 @@ mod tests {
       ".foo { transition-timing-function: step-start, steps(5, jump-start) }",
       ".foo{transition-timing-function:step-start,steps(5,start)}",
     );
+    property_range_test(
+      &["transition-timing-function", "animation-timing-function"],
+      &[
+        ("cubic-bezier(0, 2, 1, -1)", Some("cubic-bezier(0,2,1,-1)")),
+        ("cubic-bezier(-0.1, 0.1, 0.5, 0.9)", None),
+        ("cubic-bezier(0.5, 0.1, 1.1, 0.9)", None),
+        ("cubic-bezier(calc(-1), 0, calc(2), 1)", Some("cubic-bezier(0,0,1,1)")),
+        ("steps(1)", Some("step-end")),
+        ("steps(2, jump-none)", Some("steps(2,jump-none)")),
+        ("steps(0)", None),
+        ("steps(-1, start)", None),
+        ("steps(1, jump-none)", None),
+      ],
+    );
+    test(
+      r#"
+      .foo {
+        transition: opacity 1s;
+        transition-timing-function: steps(0);
+      }
+    "#,
+      indoc! {r#"
+      .foo {
+        transition: opacity 1s;
+        transition-timing-function: steps(0);
+      }
+    "#},
+    );
     minify_test(".foo { transition: width 2s ease }", ".foo{transition:width 2s}");
     minify_test(
       ".foo { transition: width 2s ease, height 1000ms cubic-bezier(0.25, 0.1, 0.25, 1) }",
