@@ -19272,6 +19272,12 @@ mod tests {
     minify_test(".foo { color: hsl(none none none) }", ".foo{color:#000}");
     minify_test(".foo { color: hwb(none none none) }", ".foo{color:red}");
     minify_test(".foo { color: rgb(none none none) }", ".foo{color:#000}");
+    minify_test(".foo { color: hsl(calc(infinity) 100% 50%) }", ".foo{color:red}");
+    minify_test(".foo { color: hsl(calc(-infinity) 100% 50%) }", ".foo{color:red}");
+    minify_test(".foo { color: hwb(calc(infinity) 20% 10%) }", ".foo{color:#e63333}");
+    minify_test(".foo { color: hwb(calc(-infinity) 20% 10%) }", ".foo{color:#e63333}");
+    minify_test(".foo { color: hsl(3e38 100% 50%) }", ".foo{color:#0f8}");
+    minify_test(".foo { color: hwb(-3e38 20% 10%) }", ".foo{color:#3392e6}");
 
     // If the browser doesn't support `#rrggbbaa` color syntax, it is converted to `transparent`.
     attr_test(

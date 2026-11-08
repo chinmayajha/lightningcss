@@ -39,7 +39,6 @@
     "text-transform-duplicates": "Repeated text-transform keywords are deduplicated by parsing.",
     "transition-identifiers": "Invalid none/CSS-wide/default transition identifiers in shorthands or lists reach typed parsing.",
     "outline-hidden": "The pinned invalid hidden outline-style value is retained by typed parsing.",
-    "infinite-hue": "Four valid hsl/hwb infinite-hue inputs panic with the same hue-range assertion in every mode. Chrome accepts the originals. Only this exact panic is accepted; crashes and timeouts remain infrastructure errors.",
     "url-modifiers": "The 32 valid background-image URL-modifier inputs are rejected by the parser. A separate Chrome specified-value probe matched 22 known modifiers and rejected 10 unknown modifiers; these are support candidates, not all independently confirmed browser regressions.",
     "var-syntax": "Eight pinned valid width values use newer var() argument forms rejected by both this parser and the tested Chrome. Record the support gap without changing the upstream expectations.",
     "browser-column-gap": "Chrome rejects column-gap:10 but accepts the emitted 10px in each mode. The starter browser oracle reproduces this difference.",
@@ -4006,90 +4005,6 @@
         "status": "invalid-typed"
       },
       "review": "color-grammar",
-      "corpora": [
-        "discovery"
-      ]
-    },
-    {
-      "id": "css/css-color/parsing/color-valid-hsl.html#757a38cfc8d5a819:0",
-      "property": "color",
-      "value": "hsl(calc(infinity) 100% 50%)",
-      "lane": "parser",
-      "modes": [
-        "print",
-        "minify",
-        "lower",
-        "lower-minify"
-      ],
-      "outcome": {
-        "error": "assertion failed: (0.0..=1.0).contains(&hue)",
-        "recognition": "panic",
-        "status": "robustness-failure"
-      },
-      "review": "infinite-hue",
-      "corpora": [
-        "discovery"
-      ]
-    },
-    {
-      "id": "css/css-color/parsing/color-valid-hsl.html#a56523d0e36c85fc:0",
-      "property": "color",
-      "value": "hsl(calc(-infinity) 100% 50%)",
-      "lane": "parser",
-      "modes": [
-        "print",
-        "minify",
-        "lower",
-        "lower-minify"
-      ],
-      "outcome": {
-        "error": "assertion failed: (0.0..=1.0).contains(&hue)",
-        "recognition": "panic",
-        "status": "robustness-failure"
-      },
-      "review": "infinite-hue",
-      "corpora": [
-        "discovery"
-      ]
-    },
-    {
-      "id": "css/css-color/parsing/color-valid-hwb.html#a7e3fd13bd0bddb3:0",
-      "property": "color",
-      "value": "hwb(calc(infinity) 20% 10%)",
-      "lane": "parser",
-      "modes": [
-        "print",
-        "minify",
-        "lower",
-        "lower-minify"
-      ],
-      "outcome": {
-        "error": "assertion failed: (0.0..=1.0).contains(&hue)",
-        "recognition": "panic",
-        "status": "robustness-failure"
-      },
-      "review": "infinite-hue",
-      "corpora": [
-        "discovery"
-      ]
-    },
-    {
-      "id": "css/css-color/parsing/color-valid-hwb.html#b633161b7e881fbe:0",
-      "property": "color",
-      "value": "hwb(calc(-infinity) 20% 10%)",
-      "lane": "parser",
-      "modes": [
-        "print",
-        "minify",
-        "lower",
-        "lower-minify"
-      ],
-      "outcome": {
-        "error": "assertion failed: (0.0..=1.0).contains(&hue)",
-        "recognition": "panic",
-        "status": "robustness-failure"
-      },
-      "review": "infinite-hue",
       "corpora": [
         "discovery"
       ]

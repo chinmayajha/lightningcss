@@ -2801,7 +2801,11 @@ impl From<HSL> for SRGB {
   fn from(hsl: HSL) -> SRGB {
     // https://drafts.csswg.org/css-color/#hsl-to-rgb
     let hsl = hsl.resolve_missing();
-    let h = (hsl.h - 360.0 * (hsl.h / 360.0).floor()) / 360.0;
+    let h = if hsl.h.is_finite() {
+      hsl.h.rem_euclid(360.0) / 360.0
+    } else {
+      0.0
+    };
     let (r, g, b) = hsl_to_rgb(h, hsl.s / 100.0, hsl.l / 100.0);
     SRGB {
       r,
